@@ -1,0 +1,230 @@
+﻿import random
+PYTHON_BLANK1 = 50
+PYTHON_BLANK2 = 52
+informations={}
+infor_fre={}
+def python_bank():
+	print('欢迎来到Python银行'.center(PYTHON_BLANK1,' '))
+	print('1办理开卡'.center(PYTHON_BLANK1,' '))
+	print('2查看功能:'.center(PYTHON_BLANK1,' '))
+	print('21查看余额'.center(PYTHON_BLANK2,' '))
+	print('3存款功能'.center(PYTHON_BLANK1,' '))
+	print('4取款功能'.center(PYTHON_BLANK1,' '))
+	print('5转账功能'.center(PYTHON_BLANK1,' '))
+	print('6销户账号'.center(PYTHON_BLANK1,' '))
+	print('7补卡功能'.center(PYTHON_BLANK1,' '))
+	print('8冻结功能'.center(PYTHON_BLANK1,' '))
+	print('9解冻功能'.center(PYTHON_BLANK1,' '))
+	print('0退出功能'.center(PYTHON_BLANK1,' '))
+
+def suijihaoma():
+	str = '1234567890'
+	str1=''
+	for i in range(1,6):
+		str1+=random.choice(str)
+	return str1
+
+
+
+def kaihu():
+	personal_inf={}
+	i = 0
+	while i<3:
+		p1=input('请输入密码:')
+		p2=input('请再次输入密码:')
+		if p1==p2:
+			print('密码设置成功')	
+			a = suijihaoma()
+			personal_inf['idcard']=input('请输入身份证号码:')
+			personal_inf['name'] = input('请输入姓名:')
+			personal_inf['pwd']=p1
+			personal_inf['phone_No']=input('请输入手机号码:')
+			personal_inf['bal']=0
+			informations[a]=personal_inf
+			print(a,':',personal_inf)
+			print(informations)
+			break
+		else:
+			print('两次密码不一致,请重新输入')
+		if i == 2:
+			print('很遗憾!开卡失败')	
+		i +=1
+
+
+
+def view_inf():
+	a=input('请输入银行账号:')
+	b=input('请输入密码')
+	if (a in informations.keys()) and (b in informations[a].values()):
+		print(informations[a])
+		print(informations)
+	elif (a in infor_fre.keys()) and (b in infor_fre[a].values()):
+		print('此账号已被冻结')
+	else:
+		print('无此卡号或密码输入有误')
+def view_bal():
+	a=input('请输入银行账号:')
+	b=input('请输入密码')	
+	if (a in informations.keys()) and (b in informations[a].values()):
+		print(informations[a]['bal'])
+	elif (a in infor_fre.keys()) and (b in infor_fre[a].values()):
+		print('此账号已被冻结')
+		print('冻结金额为',infor_fre[a]['bal'])
+	else:
+		print('无此卡号或密码输入有误')
+def deposit_num():
+	a = input('请输入银行账号:')
+	b=input('请输入密码:')
+	if (a in informations.keys()) and (b in informations[a].values()):
+		c = input('请输入存款金额:')
+		c = int(c)
+		if c % 100 == 0 and c > 0:
+			informations[a]['bal'] += c
+			print('存款成功')
+			print('余额',informations[a]['bal'])
+		else:
+			print('请输入100的正倍数')
+	elif (a in infor_fre.keys()) and (b in infor_fre[a].values()):
+		print('此账号已被冻结,无法存款')
+	else:
+		print('输入银行账号或密码不正确')
+
+
+def withdrawal_num():
+	a = input('请输入银行账号:')
+	b=input('请输入密码:')
+	if (a in informations.keys()) and (b in informations[a].values()):
+		c = input('请输入取款金额:')	
+		c = int(c)
+		if (informations[a]['bal']% 100 == 0 and informations[a]['bal'] > 0) and (c % 100 == 0 and c > 0) and (informations[a]['bal'] >= c):
+			informations[a]['bal'] -= c
+			print('取款成功')
+			print('余额',informations[a]['bal'])
+			#break
+		elif (informations[a]['bal'] % 100 != 0 and informations[a]['bal'] > 0) or (c %100 != 0 and c > 0) or (informations[a]['bal'] >= c):
+			print('请输入100正的倍数')
+		else:
+			print('余额不足')
+	elif (a in infor_fre.keys()) and (b in infor_fre[a].values()):
+		print('此账号已被冻结,无法取款')
+	else:
+		print('输入银行账号或密码不正确')
+
+
+
+def transfer():
+	a = input('请输入银行账号:')
+	b=input('请输入密码:')
+	if (a in informations.keys()) and (b in informations[a].values()):
+		d = input('请输入被转账账户')
+		if d in informations.keys() and d != a:
+			c = input('请输入转账金额:')	
+			c = int(c)	
+			informations[a]['bal'] -=c
+			informations[d]['bal'] +=c
+			print('转账成功')
+			print(informations[a]['bal'])
+		else:
+			print('账号输入不正确')
+	elif (a in infor_fre.keys()) and (b in infor_fre[a].values()):
+		print('此账号已被冻结,无法转账')
+	else:
+		print('输入银行账号或密码不正确')
+
+def closing_account():
+	a = input('请输入银行卡号:')
+	b=input('请输入密码:')
+	if (a in informations.keys()) and (b in informations[a].values()):
+		del informations[a]	
+		print('销户成功')
+	elif (a in infor_fre.keys()) and (b in infor_fre[a].values()):
+		print('此账号已被冻结，请先解冻')
+	else:
+		print('输入银行账号或密码不正确')
+
+
+def make_newcd():
+	i = input('请输入身份证号码:')
+	n= input('请输入姓名:')
+	p = input('请输入手机号码:')
+	for personal_inf in informations.values():
+		if (i == personal_inf['idcard']) and (n == personal_inf['name']) and (p == personal_inf['phone_No']):
+			print(personal_inf)
+			a =personal_inf
+			for v in informations.keys():
+				if informations[v]==a:
+					print(v)
+					pp1=input('请输入密码:')
+					pp2=input('请再次输入密码:')
+					a['pwd']=pp2	
+					b= suijihaoma()
+					informations[b]=a	
+					del informations[v]	
+					print(b,':',a)
+					print(informations)
+					print('补卡成功')
+				#elif (a in infor_fre.keys()) and (b in infor_fre[a].values()):
+					break
+			break
+					
+				
+			
+def freeze_account():
+	a = input('请输入银行卡号:')
+	b=input('请输入密码:')
+	c=input('请输入省份证号码:')
+	if (a in informations.keys()) and (b in informations[a].values()) and (c in informations[a].values()):
+		print('账户冻结成功')
+		infor_fre[a]=informations[a]
+		print(infor_fre)
+		del informations[a]
+	else:
+		print('输入银行账号或密码或身份证号不正确')
+
+def unfreeze_acconut():
+	a = input('请输入银行卡号:')
+	b=input('请输入密码:')
+	c=input('请输入省份证号码:')
+	if (a in infor_fre.keys()) and (b in infor_fre[a].values()):
+		print('解冻成功')
+		informations[a]=infor_fre[a]
+		del infor_fre[a]
+	else:
+		print('输入银行账号或密码或身份证号不正确')
+
+def exit1():
+	print('安全退出')
+
+
+python_bank()
+while 1:
+
+	num = input('请输入选项:')
+	num = int(num)
+		
+	if num ==1:
+		kaihu()
+	elif num ==2:
+		view_inf()
+	elif num == 21:
+		view_bal()
+	elif num ==3:
+		deposit_num()
+	elif num == 4:
+		withdrawal_num()
+	elif num == 5:
+		transfer()
+	elif num == 6:
+		closing_account()
+	elif num == 7:
+		make_newcd()
+		
+	elif num ==8:
+		freeze_account()
+	elif num == 9:
+		unfreeze_acconut()
+	elif num == 0:
+		exit1()
+		break
+	else:
+		print('输入跑偏了呦')	
